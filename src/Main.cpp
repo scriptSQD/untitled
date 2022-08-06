@@ -52,6 +52,10 @@ int main(int argc, char *argv[]) {
             Logger::LogToStdout(
                 "Verbose log enabled. Printing additional output to console");
         }
+
+        // We do not need this anymore
+        // after flag init complete
+        delete parser;
     }
 
     if (filePath != "") {
@@ -61,9 +65,6 @@ int main(int argc, char *argv[]) {
                   << " exists: " << (fs::exists(filePath) ? "Yes" : "No")
                   << std::endl;
     }
-
-    Logger::SetDebugFile("/home/sqd/untitled_log_new.log");
-    Logger::Log("logger: Changed debug file to ~/untitled_log_new.log");
 
     std::cout << "Hello, World!" << std::endl;
     return 0;
