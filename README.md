@@ -8,14 +8,14 @@ Below you can find some useful stuff related to the project.
 
 ## Requirements
 
-- Relatively new Clang or MSVC compiler.
-- CMake 3.7+
-- C++17 Standard support
+-   Relatively new C++ compiler.
+-   CMake 3.7+
+-   C++17 Standard support
 
-GCC doesn't work out because it doesn't support inline template specialization. 
-I gave it a few tries to optimize my code and make it compile on GCC, but it didn't seem to work.
+~~GCC doesn't work out because it doesn't support inline template specialization.
+I gave it a few tries to optimize my code and make it compile on GCC, but it didn't seem to work. So only Clang/MSVC support for now.~~
 
-So only Clang/MSVC support for now.
+GCC support is included too with function overrides instead of template specializations. Tested on versions 9 through 12.
 
 ## Setting up
 
@@ -32,7 +32,7 @@ make
 # Run
 ./untitled -h
 # untitled - a scriptSQD's C++ program to learn and test new things.
-# 
+#
 # Available arguments and usage patterns:
 # Usage:
 #     1. untitled
@@ -51,5 +51,6 @@ make
 
 I will be trying to split all advanced functionality to libraries and upload them separately as git modules.
 Here are some of them:
-- [Logger](https://github.com/scriptSQD/untitled-logger)
-- [ArgParser](https://github.com/scriptSQD/untitled-argparser)
+
+-   [Logger](https://github.com/scriptSQD/untitled-logger)
+-   [ArgParser](https://github.com/scriptSQD/untitled-argparser)
