@@ -1,0 +1,6 @@
+[submodule "deps/untitled-argparser"]
+	path = deps/untitled-argparser
+	url = git@github.com:scriptSQD/untitled-argparser.git
+[submodule "deps/untitled-logger"]
+	path = deps/untitled-logger
+	url = git@github.com:scriptSQD/untitled-logger.git

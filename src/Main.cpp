@@ -5,8 +5,6 @@
 #include <Logger.hpp>
 #include <Utils.hpp>
 
-namespace fs = std::filesystem;
-
 int main(int argc, char *argv[]) {
     bool help;
 
