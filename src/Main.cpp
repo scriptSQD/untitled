@@ -5,62 +5,62 @@
 #include <Logger.hpp>
 #include <Utils.hpp>
 
+namespace fs = std::filesystem;
+
 int main(int argc, char *argv[]) {
-    bool help;
+    bool help = false;
 
-    bool verbose;
-    bool noStdout;
+    bool verbose = false;
+    bool noStdout = false;
 
-    fs::path filePath;
-    fs::path debugFilePath;
-
-    auto *parser = new ArgParser(argc, argv);
-
-    parser->IfFlagsSet({"--help", "-h"})
-        ->GetFlagValue(help)
-        ->IfFlagsSet({"--file", "-f"})
-        ->GetFlagValue(filePath)
-        ->IfFlagsSet({"--verbose", "-v"})
-        ->GetFlagValue(verbose)
-        ->IfFlagsSet({"--debug-to-file", "--df"})
-        ->GetFlagValue(debugFilePath)
-        ->IfFlagsSet({"--no-stdout", "-n"})
-        ->GetFlagValue(noStdout);
+    fs::path filePath{};
+    fs::path debugFilePath{};
 
     // Define stuff based on arguments
     {
+        std::unique_ptr<SQD::ArgParser> parser =
+            std::make_unique<SQD::ArgParser>(argc, argv);
+
+        parser->IfFlagsSet({"--help", "-h"})
+            ->GetFlagValue(help)
+            ->IfFlagsSet({"--file", "-f"})
+            ->GetFlagValue(filePath)
+            ->IfFlagsSet({"--verbose", "-v"})
+            ->GetFlagValue(verbose)
+            ->IfFlagsSet({"--debug-to-file", "--df"})
+            ->GetFlagValue(debugFilePath)
+            ->IfFlagsSet({"--no-stdout", "-n"})
+            ->GetFlagValue(noStdout);
+
         if (help) {
-            Utils::printHelp();
+            Utils::PrintHelp();
             return 0;
         }
 
         if (!debugFilePath.empty()) {
-            Logger::EnableLogger();
-            Logger::EnableDebugToFile();
-            Logger::SetDebugFile(debugFilePath);
+            SQD::Logger::EnableLogger();
+            SQD::Logger::EnableDebugToFile();
+            SQD::Logger::SetDebugFile(debugFilePath);
 
-            Logger::LogToStdout("Log-to-file enabled. Printing output to " +
-                                debugFilePath.string());
+            SQD::Logger::LogToStdout(
+                "Log-to-file enabled. Printing output to " +
+                fs::absolute(debugFilePath).string());
         }
 
         if (noStdout) {
-            Logger::EnableNoStdout();
+            SQD::Logger::EnableNoStdout();
         }
 
         if (verbose) {
-            Logger::EnableLogger();
-            Logger::LogToStdout(
+            SQD::Logger::EnableLogger();
+            SQD::Logger::LogToStdout(
                 "Verbose log enabled. Printing additional output to console");
         }
-
-        // We do not need this anymore
-        // after flag init complete
-        delete parser;
     }
 
     if (filePath != "") {
-        Logger::Log("filesystem: Checking " + filePath.string() +
-                    " for existence.");
+        SQD::Logger::Log("filesystem: Checking " + filePath.string() +
+                         " for existence.");
         std::cout << "Checking if path " << filePath
                   << " exists: " << (fs::exists(filePath) ? "Yes" : "No")
                   << std::endl;

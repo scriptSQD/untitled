@@ -5,5 +5,5 @@
 
 class Utils {
 public:
-    static void printHelp();
+    static void PrintHelp();
 };

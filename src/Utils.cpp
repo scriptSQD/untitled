@@ -1,6 +1,6 @@
 #include "Utils.hpp"
 
-void Utils::printHelp() {
+void Utils::PrintHelp() {
     std::cout << R"(untitled - a scriptSQD's C++ program to learn and test new things.
 
 Available arguments and usage patterns:
