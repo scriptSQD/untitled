@@ -24,21 +24,23 @@ bool UntitledApp::OnInit() {
 
         if (verbose) {
             SQD::Logger::EnableLogger();
-            SQD::Logger::Log("Enabled logger from --verbose flag.");
+            SQD_LOG("Enabled logger from --verbose flag.");
         }
 
         if (!connectionString.empty()) {
-            SQD::Logger::Log(
-                "Connecting to PostgreSQL via connection string: " +
-                connectionString);
+            SQD_LOG("Connecting to PostgreSQL via connection string: " +
+                    connectionString);
             if (!PQGlobal::MakePQConnection(connectionString).first) {
-                SQD::Logger::Log("Connection to PGSQL failed.",
-                                 SQD::Logger::LEVEL_WARNING);
+                SQD_WARN("Connection to PGSQL failed.");
             }
         }
 
         delete parser;
     }
+
+    // Set this so X11 can target this application
+    // By default is 'untitled' and can cause mess
+    this->SetAppName("sqd.untitled.manager");
 
     auto *frame = new UntitledFrame(
         nullptr, wxID_ANY, "Untitled - a scriptSQD's student manager.");

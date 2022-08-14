@@ -1,11 +1,12 @@
 #include <StartupPanel.hpp>
 
 StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
-    : wxPanel(parent, id), sizer(new wxBoxSizer(wxVERTICAL)) {
-
+    : wxPanel(parent, id),
+      sizer(new wxStaticBoxSizer(wxVERTICAL, this, "Quick start")) {
     this->m_Header = new wxStaticText(
         this, wxID_ANY, "You are not connected to any database!",
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+
     this->m_SubHeader =
         new wxStaticText(this, wxID_ANY,
                          "This is required to continue. Please "
@@ -19,14 +20,13 @@ StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
 
     // *most likely* temporary solution for error details
     this->m_ErrorDetailsButton = new wxCommandLinkButton(
-        this, IdErrorDetails,
-        "Error details:", "Click here to get additional error details.");
+        this, IdErrorDetails, "Error details:", "Get error details.");
     m_ErrorDetailsButton->Disable();
 
     m_Header->SetFont(UntitledFonts::FONT_H1);
-    m_Header->Wrap(500);
+    m_Header->Wrap(m_Header->GetCharWidth() * 28);
     m_SubHeader->SetFont(UntitledFonts::FONT_H2);
-    m_SubHeader->Wrap(550);
+    m_SubHeader->Wrap(m_SubHeader->GetCharWidth() * 32);
 
     sizer->Add(m_Header, 0, wxALIGN_CENTER | wxALL, 4);
     sizer->Add(m_SubHeader, 0, wxALIGN_CENTER | wxALL, 4);
@@ -34,23 +34,22 @@ StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
     sizer->Add(m_ConnectButton, 0, wxALIGN_CENTER | wxALL, 4);
     sizer->Add(m_ErrorDetailsButton, 0, wxALIGN_CENTER | wxALL, 4);
 
-    sizer->Layout();
     this->SetSizerAndFit(sizer);
 
     m_ConnectButton->Bind(wxEVT_BUTTON, &StartupPanel::OnConnectButton, this,
                           IdConnect);
     m_ErrorDetailsButton->Bind(
         wxEVT_BUTTON,
-        [this](wxCommandEvent &evt) { wxMessageBox(m_ErrorDetails); },
+        [this](wxCommandEvent &evt) {
+            wxMessageBox(m_ErrorDetails, "Error details");
+        },
         IdErrorDetails);
 }
 
 void StartupPanel::OnConnectButton(wxCommandEvent &evt) {
-    SQD::Logger::Log("OnConnectButton: Enter handler.");
+    SQD_LOG("OnConnectButton: Enter handler.");
     if (m_Input->GetInput().empty()) {
-        SQD::Logger::Log("OnConnectButton: User provided no connection string",
-                         SQD::Logger::LEVEL_WARNING);
-        wxMessageBox("Please provide non-empty string to the input box!");
+        SQD_LOG("OnConnectButton: User provided no connection string");
         return;
     }
 
@@ -59,7 +58,7 @@ void StartupPanel::OnConnectButton(wxCommandEvent &evt) {
 
     if (!success) {
         wxMessageBox(
-            "Connection failed!\nCheck out the details via button below.");
+            "Connection failed!\nCheck out the details on button below.");
         m_ErrorDetails = errorDetails;
         m_ErrorDetailsButton->Enable();
 

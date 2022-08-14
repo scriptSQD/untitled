@@ -1,12 +1,16 @@
 [submodule "deps/untitled-argparser"]
 	path = deps/untitled-argparser
 	url = https://github.com/scriptSQD/untitled-argparser.git
+	shallow = true
 [submodule "deps/untitled-logger"]
 	path = deps/untitled-logger
 	url = https://github.com/scriptSQD/untitled-logger.git
+	shallow = true
 [submodule "deps/wxWidgets"]
 	path = deps/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
+	shallow = true
 [submodule "deps/libpqxx"]
 	path = deps/libpqxx
 	url = https://github.com/jtv/libpqxx.git
+	shallow = true

@@ -11,7 +11,7 @@ class StartupPanel : public wxPanel {
     StartupPanel(wxWindow *parent, wxWindowID id);
 
   private:
-    wxBoxSizer *sizer;
+    wxStaticBoxSizer *sizer;
 
     wxStaticText *m_Header, *m_SubHeader;
     wxButton *m_ConnectButton;

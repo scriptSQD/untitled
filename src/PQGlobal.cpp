@@ -3,25 +3,22 @@
 std::pair<bool, std::string>
 PQGlobal::MakePQConnection(const std::string &connString) {
     try {
-        SQD::Logger::Log("Attempting to connect to PostgreSQL at '" +
-                         connString + "'.");
+        SQD_LOG("Attempting to connect to PostgreSQL at '" + connString + "'.");
         PQGlobal::m_PQconnection =
             std::make_unique<pqxx::connection>(connString);
 
-        SQD::Logger::Log(
-            "Connected successfully! Processing associated callbacks.");
+        SQD_LOG("Connected successfully! Processing associated callbacks.");
         for (const auto &cb : PQGlobal::m_SucceedCallbackList) {
             std::invoke(cb);
         }
 
         return {true, ""};
     } catch (...) {
-        SQD::Logger::Log("Caught exception while trying to connect to PGSQL.",
-                         SQD::Logger::LEVEL_ERROR);
+        SQD_ERR("Caught exception while trying to connect to PGSQL.");
         std::string what =
             ExceptionHandler::HandleEptr(std::current_exception());
 
-        SQD::Logger::Log("Processing callbacks on failure.");
+        SQD_LOG("Processing callbacks on failure.");
         for (const auto &cb : PQGlobal::m_FailedCallbackList) {
             std::invoke(cb);
         }

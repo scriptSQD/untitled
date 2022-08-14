@@ -18,9 +18,11 @@ UntitledFrame::UntitledFrame(wxWindow *parent, wxWindowID id,
     if (PQGlobal::IsConnectionOpen()) {
         this->managementUi = new Tabs(this, wxID_ANY);
         sizer->Add(managementUi, 1, wxEXPAND);
+        this->FitInside();
     } else {
         this->startupPanel = new StartupPanel(this, wxID_ANY);
-        sizer->Add(startupPanel, 1, wxEXPAND);
+        sizer->Add(startupPanel, 1, wxEXPAND | wxALL, 3);
+        this->FitInside();
     }
 
     this->SetSizerAndFit(sizer);
@@ -32,28 +34,30 @@ UntitledFrame::UntitledFrame(wxWindow *parent, wxWindowID id,
 }
 
 void UntitledFrame::OnQuit(wxCommandEvent &evt) {
-    SQD::Logger::Log("OnQuit: Called close event.");
+    SQD_LOG("OnQuit: Called close event.");
     this->Close(true);
 }
+
 void UntitledFrame::ChangeDb(wxCommandEvent &evt) {
-    SQD::Logger::Log("ChangeDb: enter function");
+    SQD_LOG("ChangeDb: enter function");
     wxTextEntryDialog dlg(nullptr, "Enter new database connection string:",
                           "Connect to database", "postgresql://localhost");
 
     if (dlg.ShowModal() == wxID_OK) {
-        SQD::Logger::Log("ChangeDb: Got input from modal dialog: " +
-                         dlg.GetValue().ToStdString());
+        SQD_LOG("ChangeDb: Got input from modal dialog: " +
+                dlg.GetValue().ToStdString());
 
         if (!PQGlobal::MakePQConnection(dlg.GetValue().ToStdString()).first)
             wxMessageBox("Connection failed!");
 
     } else
-        SQD::Logger::Log("ChangeDb: Input abandoned.");
+        SQD_LOG("ChangeDb: Input abandoned.");
 
-    SQD::Logger::Log("ChangeDb: Dialog processed.");
+    SQD_LOG("ChangeDb: Dialog processed.");
 }
+
 void UntitledFrame::OnConnected() {
-    SQD::Logger::Log("OnConnected: entering handler.");
+    SQD_LOG("OnConnected: entering handler.");
     if (startupPanel != nullptr) {
         startupPanel->Show(false);
         ClearSizer();
@@ -79,7 +83,7 @@ void UntitledFrame::OnConnectionFailed() {
 
     if (startupPanel == nullptr) {
         startupPanel = new StartupPanel(this, wxID_ANY);
-        sizer->Add(startupPanel, 1, wxEXPAND);
+        sizer->Add(startupPanel, 1, wxEXPAND | wxALL, 3);
         sizer->Layout();
 
         this->Layout();
