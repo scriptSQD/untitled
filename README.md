@@ -8,20 +8,27 @@ Below you can find some useful stuff related to the project.
 
 ## Requirements
 
--   Relatively new C++ compiler.
--   CMake 3.7+
--   C++17 Standard support
+- Relatively new C++ compiler.
+- C++17 Standard support
+- CMake 3.12+
+- PostgreSQL library in CMake search path
 
 ~~GCC doesn't work out because it doesn't support inline template specialization.
-I gave it a few tries to optimize my code and make it compile on GCC, but it didn't seem to work. So only Clang/MSVC support for now.~~
+I gave it a few tries to optimize my code and make it compile on GCC, but it didn't seem to work. So only Clang/MSVC
+support for now.~~
 
-GCC support is included too with function overrides instead of template specializations. Tested on versions 9 through 12.
+Compilers description:
+
+1. GCC support is included too with function overrides instead of template specializations.
+   Tested on version 12.1.1 from Gentoo Ebuild repos.
+
+2. Clang works on 14.0.6 from Gentoo Ebuild repos as well.
 
 ## Setting up
 
 ```shell
 # Clone
-git clone git@github.com:scriptSQD/untitled
+git clone --recursive git@github.com:scriptSQD/untitled
 cd untitled
 
 # Build
@@ -30,27 +37,18 @@ cmake ..
 make
 
 # Run
-./untitled -h
-# untitled - a scriptSQD's C++ program to learn and test new things.
-#
-# Available arguments and usage patterns:
-# Usage:
-#     1. untitled
-#     2. untitled -v
-#     3. untitled -f /bin
-#     4. untitled --df ~/untitled_log_2022.log
-# Arguments:
-#     --file, -f                  File path to check for existence.
-#     --verbose, -v               Enable verbose mode (expanded output).
-#     --help, -h                  Display help menu and exit.
-#     --debug-to-file, --df       Print debug info to file specified file
-#     --no-stdout, -n             Do not print debug to stdout if --debug-to-file is enabled.
+./untitled
 ```
+
+## Debugging
+
+I'm testing the code to build on both GCC 12 and Clang 14 compilers but mainly use LLDB for debugging.
+For LLDB, you'd want to set "-fstandalone-debug" compiler flag for the strings to be displayed correctly.
 
 ## Submodules
 
 I will be trying to split all advanced functionality to libraries and upload them separately as git modules.
 Here are some of them:
 
--   [Logger](https://github.com/scriptSQD/untitled-logger)
--   [ArgParser](https://github.com/scriptSQD/untitled-argparser)
+- [Logger](https://github.com/scriptSQD/untitled-logger)
+- [ArgParser](https://github.com/scriptSQD/untitled-argparser)

@@ -1,6 +1,12 @@
 [submodule "deps/untitled-argparser"]
 	path = deps/untitled-argparser
-	url = git@github.com:scriptSQD/untitled-argparser.git
+	url = https://github.com/scriptSQD/untitled-argparser.git
 [submodule "deps/untitled-logger"]
 	path = deps/untitled-logger
-	url = git@github.com:scriptSQD/untitled-logger.git
+	url = https://github.com/scriptSQD/untitled-logger.git
+[submodule "deps/wxWidgets"]
+	path = deps/wxWidgets
+	url = https://github.com/wxWidgets/wxWidgets.git
+[submodule "deps/libpqxx"]
+	path = deps/libpqxx
+	url = https://github.com/jtv/libpqxx.git
