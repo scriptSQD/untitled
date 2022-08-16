@@ -58,7 +58,8 @@ void StartupPanel::OnConnectButton(wxCommandEvent &evt) {
 
     if (!success) {
         wxMessageBox(
-            "Connection failed!\nCheck out the details on button below.");
+            "Connection failed!\nCheck out the details on button below.",
+            "Failure.");
         m_ErrorDetails = errorDetails;
         m_ErrorDetailsButton->Enable();
 

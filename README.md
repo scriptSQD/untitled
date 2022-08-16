@@ -6,6 +6,21 @@ Here I'll be testing out different C++ stuff, learning things, etc.
 
 Below you can find some useful stuff related to the project.
 
+### Content map:
+
+- [Usage](#usage)
+- [Requirements](#requirements)
+- [Setting up](#setting-up)
+- [Debugging](#debugging)
+- [Submodules](#submodules)
+
+## Usage
+
+The only real requirement is your database should have `sqd.untitled.manager` schema. Application will look for the one
+and pull data from `school_info`, `students_info`, `grades_info`, `subjects_info` tables.
+
+HiDPI support is not yet implemented, so beware that on some monitors the thing may appear blurry and ugly.
+
 ## Requirements
 
 - Relatively new C++ compiler.

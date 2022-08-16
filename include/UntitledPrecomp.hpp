@@ -15,6 +15,8 @@
 #include <map>
 #include <sstream>
 #include <string>
+#include <tuple>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -23,4 +25,4 @@
 #include <Logger.hpp>
 #include <PQGlobal.hpp>
 
-enum { None = 0, IdChangeDb, IdConnect, IdErrorDetails };
+enum { None = 0, IdChangeDb, IdConnect, IdErrorDetails, IdReloadSchoolList };
