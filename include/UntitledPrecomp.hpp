@@ -7,6 +7,8 @@
 #include <wx/wx.h>
 #endif
 
+#include <Structures/DatabaseTable.hpp>
+
 #include <algorithm>
 #include <filesystem>
 #include <iostream>

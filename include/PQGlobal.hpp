@@ -8,17 +8,27 @@
 
 class PQGlobal {
   public:
+  public:
     static std::pair<bool, std::string>
     MakePQConnection(const std::string &connString);
 
-    static bool IsConnectionOpen();
+    static bool IsConnectionOpen() {
+        if (!PQGlobal::s_PGconnection)
+            return false;
+        return PQGlobal::s_PGconnection->is_open();
+    };
 
     static bool CloseConnection();
 
-    static void OnConnected(const std::function<void()> &callback);
-    static void OnConnectionFailed(const std::function<void()> &callback);
+    static void OnConnected(const std::function<void()> &callback) {
+        PQGlobal::s_SucceedCallbackList.push_back(callback);
+    }
 
-    static std::map<int, std::string>
+    static void OnConnectionFailed(const std::function<void()> &callback) {
+        PQGlobal::s_FailedCallbackList.push_back(callback);
+    }
+
+    static std::vector<std::string>
     EnumerateColumns(std::string_view tableName);
 
     template <typename... CTs>
@@ -52,8 +62,12 @@ class PQGlobal {
 
     static std::optional<pqxx::result> ProcessQuery(std::string_view query);
 
+    static DatabaseTable ParseTable(std::string_view tableName);
+
   private:
-    inline static std::shared_ptr<pqxx::work> CreateTransaction();
+    inline static std::shared_ptr<pqxx::work> CreateTransaction() {
+        return std::make_shared<pqxx::work>(*PQGlobal::s_PGconnection);
+    };
 
   private:
     inline static std::unique_ptr<pqxx::connection> s_PGconnection = nullptr;

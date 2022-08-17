@@ -14,14 +14,14 @@ message("Sources are: ${untitled_sources}")
 add_executable(untitled ${untitled_sources})
 
 if (WIN32)
-set_target_properties(untitled PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
-endif()
+    set_target_properties(untitled PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
+endif ()
 
 target_include_directories(untitled PUBLIC
         ${ARGPARSER_INCLUDES}
         ${LOGGER_INCLUDES}
         "include/"
-)
+        )
 
 target_link_libraries(untitled PUBLIC
         ${ARGPARSER_LIBS}
@@ -30,6 +30,6 @@ target_link_libraries(untitled PUBLIC
         wx::base
         wx::net
         pqxx
-)
+        )
 
 target_precompile_headers(untitled PUBLIC "include/UntitledPrecomp.hpp")

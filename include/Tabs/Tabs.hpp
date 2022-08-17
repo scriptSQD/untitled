@@ -12,6 +12,11 @@
 class Tabs : public wxNotebook {
   public:
     Tabs(wxWindow *parent, wxWindowID id,
-             const wxPoint &pos = wxDefaultPosition,
-             const wxSize &size = wxDefaultSize);
+         const wxPoint &pos = wxDefaultPosition,
+         const wxSize &size = wxDefaultSize);
+
+    static void SetPage(int page);
+
+  private:
+    inline static Tabs *s_Instance = nullptr;
 };

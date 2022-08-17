@@ -38,19 +38,7 @@ bool PQGlobal::CloseConnection() {
         return false;
     }
 }
-bool PQGlobal::IsConnectionOpen() {
-    if (!PQGlobal::s_PGconnection)
-        return false;
-    return PQGlobal::s_PGconnection->is_open();
-}
 
-void PQGlobal::OnConnected(const std::function<void()> &callback) {
-    PQGlobal::s_SucceedCallbackList.push_back(callback);
-}
-
-void PQGlobal::OnConnectionFailed(const std::function<void()> &callback) {
-    PQGlobal::s_FailedCallbackList.push_back(callback);
-}
 std::optional<pqxx::result> PQGlobal::ProcessQuery(std::string_view query) {
     auto t = PQGlobal::CreateTransaction();
 
@@ -71,13 +59,10 @@ std::optional<pqxx::result> PQGlobal::ProcessQuery(std::string_view query) {
         return {};
     }
 }
-std::shared_ptr<pqxx::work> PQGlobal::CreateTransaction() {
-    return std::make_shared<pqxx::work>(*PQGlobal::s_PGconnection);
-}
 
-std::map<int, std::string>
+std::vector<std::string>
 PQGlobal::EnumerateColumns(std::string_view tableName) {
-    auto resp = std::map<int, std::string>();
+    auto resp = std::vector<std::string>();
 
     const auto &q = "SELECT column_name FROM information_schema.columns WHERE "
                     "table_name = N'" +
@@ -94,7 +79,7 @@ PQGlobal::EnumerateColumns(std::string_view tableName) {
         for (pqxx::row row : queryRes.value()) {
             const auto [rowName] = row.as<std::string>();
 
-            resp.insert({index, rowName});
+            resp.emplace_back(rowName);
             index++;
         }
     } catch (...) {
@@ -104,4 +89,44 @@ PQGlobal::EnumerateColumns(std::string_view tableName) {
     }
 
     return resp;
+}
+DatabaseTable PQGlobal::ParseTable(std::string_view tableName) {
+    auto ret = DatabaseTable();
+
+    auto cols = EnumerateColumns(tableName);
+    for (const auto &col : cols) {
+        // Populate column metadata
+        ret.InsertColumn(col);
+    }
+
+    // This query is subject to change, because we probably want to pass schema
+    // name from user input as well.
+    auto queryResp = ProcessQuery(R"(SELECT * FROM "sqd.untitled.manager".")" +
+                                  std::string(tableName) + "\"");
+
+    if (!queryResp.has_value()) {
+        SQD_WARN("ParseTable: Query returned no data. Seems like there are no "
+                 "rows in the table.");
+        return {};
+    }
+
+    for (pqxx::row row : queryResp.value()) {
+        auto rowData = DatabaseTable::RowData();
+
+        // Loop through columns and accumulate data
+        for (const auto &col : cols) {
+            std::string colVal;
+            row.at(col).to(colVal, std::string("<null>"));
+
+            rowData.emplace_back(
+                DatabaseTable::ColumnData({col, colVal}));
+        }
+
+        ret.InsertRow(rowData);
+    }
+
+    return ret;
 };
+
+// DatabaseTable namespace
+
