@@ -1,4 +1,4 @@
-#include <ErrorDetailsPane.hpp>
+#include "Components/ErrorDetailsPane.hpp"
 #include <utility>
 
 ErrorDetailsPane::ErrorDetailsPane(wxWindow *parent, wxWindowID id,

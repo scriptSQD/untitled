@@ -3,7 +3,8 @@
 std::pair<bool, std::string>
 PQGlobal::MakePQConnection(const std::string &connString) {
     try {
-        SQD_LOG("Attempting to connect to PostgreSQL at '" + connString + "'.");
+        SQD_LOG(fmt::format("Attempting to connect to PostgreSQL at '{}'",
+                            connString));
         PQGlobal::s_PGconnection =
             std::make_unique<pqxx::connection>(connString);
 
@@ -64,33 +65,33 @@ std::vector<std::string>
 PQGlobal::EnumerateColumns(std::string_view tableName) {
     auto resp = std::vector<std::string>();
 
-    const auto &q = "SELECT column_name FROM information_schema.columns WHERE "
-                    "table_name = N'" +
-                    std::string(tableName) + "'";
+    const auto &q =
+        fmt::format("SELECT column_name FROM information_schema.columns WHERE "
+                    "table_name = N'{}'",
+                    tableName);
 
     auto queryRes = PQGlobal::ProcessQuery(q);
-    if (!queryRes.has_value()) {
-        SQD_WARN("Enumerating columns returned nothing!");
-        return resp;
-    }
 
-    auto index = 0;
-    try {
-        for (pqxx::row row : queryRes.value()) {
-            const auto [rowName] = row.as<std::string>();
+    Utils::HandleOptional(queryRes, [&resp](const pqxx::result &queryRes) {
+        auto index = 0;
+        try {
+            for (pqxx::row row : queryRes) {
+                const auto [rowName] = row.as<std::string>();
 
-            resp.emplace_back(rowName);
-            index++;
+                resp.emplace_back(rowName);
+                index++;
+            }
+        } catch (...) {
+            SQD_ERR("Caught exception while trying to populate with enumerated "
+                    "columns.");
+            ExceptionHandler::HandleEptr(std::current_exception());
         }
-    } catch (...) {
-        SQD_ERR("Caught exception while trying to populate with enumerated "
-                "columns.");
-        ExceptionHandler::HandleEptr(std::current_exception());
-    }
+    });
 
     return resp;
 }
-DatabaseTable PQGlobal::ParseTable(std::string_view tableName) {
+DatabaseTable PQGlobal::ParseTable(std::string_view schemaName,
+                                   std::string_view tableName) {
     auto ret = DatabaseTable();
 
     auto cols = EnumerateColumns(tableName);
@@ -99,34 +100,78 @@ DatabaseTable PQGlobal::ParseTable(std::string_view tableName) {
         ret.InsertColumn(col);
     }
 
-    // This query is subject to change, because we probably want to pass schema
-    // name from user input as well.
-    auto queryResp = ProcessQuery(R"(SELECT * FROM "sqd.untitled.manager".")" +
-                                  std::string(tableName) + "\"");
+    auto queryResp = ProcessQuery(
+        fmt::format(R"(SELECT * FROM "{}"."{}")", schemaName, tableName));
 
-    if (!queryResp.has_value()) {
-        SQD_WARN("ParseTable: Query returned no data. Seems like there are no "
-                 "rows in the table.");
-        return {};
-    }
+    Utils::HandleOptional(queryResp, [&ret,
+                                      &cols](const pqxx::result &queryRes) {
+        for (pqxx::row row : queryRes) {
+            auto rowData = DatabaseTable::RowData();
 
-    for (pqxx::row row : queryResp.value()) {
-        auto rowData = DatabaseTable::RowData();
+            // Loop through columns and accumulate data
+            for (const auto &col : cols) {
+                std::string colVal;
+                row.at(col).to(colVal, std::string("<null>"));
 
-        // Loop through columns and accumulate data
-        for (const auto &col : cols) {
-            std::string colVal;
-            row.at(col).to(colVal, std::string("<null>"));
+                rowData.emplace_back(DatabaseTable::ColumnData({col, colVal}));
+            }
 
-            rowData.emplace_back(
-                DatabaseTable::ColumnData({col, colVal}));
+            ret.InsertRow(rowData);
         }
-
-        ret.InsertRow(rowData);
-    }
+    });
 
     return ret;
-};
+}
 
-// DatabaseTable namespace
+DatabaseMetadata PQGlobal::IntrospectDatabase() {
+    auto dbMeta = DatabaseMetadata();
 
+    for (const auto &schema : PQGlobal::GetSchemas()) {
+        dbMeta.AddSchema(schema);
+
+        for (const auto &table : PQGlobal::GetTablesForSchema(schema)) {
+            dbMeta.AddTableForSchema(schema, table);
+        }
+    }
+
+    return dbMeta;
+}
+
+std::vector<std::string> PQGlobal::GetSchemas() {
+    auto ret = std::vector<std::string>();
+
+    auto queryResp =
+        PQGlobal::ProcessQuery("SELECT schema_name\n"
+                               "FROM information_schema.schemata\n"
+                               "WHERE schema_name !~ '^pg_'\n"
+                               "AND NOT schema_name = 'information_schema'");
+
+    Utils::HandleOptional(queryResp, [&ret](const pqxx::result &queryRes) {
+        for (pqxx::row row : queryRes) {
+            const auto &[schemaName] = row.as<std::string>();
+
+            ret.emplace_back(schemaName);
+        }
+    });
+
+    return ret;
+}
+
+std::vector<std::string> PQGlobal::GetTablesForSchema(std::string_view name) {
+    auto ret = std::vector<std::string>();
+
+    auto queryResp = PQGlobal::ProcessQuery(
+        fmt::format("SELECT table_name FROM information_schema.tables\n"
+                    "WHERE table_schema = '{}'",
+                    name));
+
+    Utils::HandleOptional(queryResp, [&ret](const pqxx::result &queryRes) {
+        for (pqxx::row row : queryRes) {
+            const auto &[schemaName] = row.as<std::string>();
+
+            ret.emplace_back(schemaName);
+        }
+    });
+
+    return ret;
+}

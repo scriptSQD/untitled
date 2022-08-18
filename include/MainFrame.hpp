@@ -2,7 +2,7 @@
 
 #include <UntitledPrecomp.hpp>
 
-#include <StartupPanel.hpp>
+#include "Components/StartupPanel.hpp"
 #include <Tabs/Tabs.hpp>
 
 class UntitledFrame : public wxFrame {

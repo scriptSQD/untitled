@@ -7,6 +7,7 @@ add_subdirectory("deps/untitled-argparser")
 add_subdirectory("deps/untitled-logger")
 add_subdirectory("deps/wxWidgets")
 add_subdirectory("deps/libpqxx")
+add_subdirectory("deps/fmt")
 
 file(GLOB_RECURSE untitled_sources CONFIGURE_DEPENDS "src/**")
 message("Sources are: ${untitled_sources}")
@@ -29,7 +30,9 @@ target_link_libraries(untitled PUBLIC
         wx::core
         wx::base
         wx::net
+        wx::aui
         pqxx
+        fmt
         )
 
 target_precompile_headers(untitled PUBLIC "include/UntitledPrecomp.hpp")

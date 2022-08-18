@@ -8,23 +8,25 @@
 
 class TabMain : public wxPanel {
   public:
-    TabMain(wxWindow *parent, wxWindowID id,
-            const wxPoint &pos = wxDefaultPosition,
-            const wxSize &size = wxDefaultSize);
+    TabMain(wxWindow *parent, wxWindowID winid, DatabaseMetadata::TableLocation table);
+    void UpdateTable() { PopulateItemListCtrl(); };
 
   private:
-    void RetrieveSchools();
-    void PopulateSchoolListCtrl();
-    void ReloadSchoolList(wxCommandEvent &evt);
-    void OnSchoolSelected(wxListEvent &evt);
+    void RetrieveTableData();
+    void PopulateItemListCtrl();
+    void ReloadItemList(wxCommandEvent &evt);
+    void OnItemSelected(wxListEvent &evt);
 
   private:
-    DatabaseTable m_SchoolList;
+    static std::string CapitalizeString(const std::string &source);
+
+  private:
+    DatabaseMetadata::TableLocation m_Table;
+
+    DatabaseTable m_DataList;
 
     wxStaticText *m_Header;
-    wxBoxSizer *m_MainSizer, *m_SchoolListSizer, *m_SchoolDetailsSizer;
-    wxListView *m_schoolListView;
+    wxBoxSizer *m_MainSizer, *m_ListSizer, *m_FieldDetailsSizer;
+    wxListView *m_ListView;
     wxButton *m_ReloadButton;
-
-    static std::string CapitalizeString(const std::string &source);
 };

@@ -2,8 +2,8 @@
 
 #include <UntitledPrecomp.hpp>
 
+#include "Utilities/Utils.hpp"
 #include <ArgParser.hpp>
-#include <Utils.hpp>
 
 #include <MainFrame.hpp>
 

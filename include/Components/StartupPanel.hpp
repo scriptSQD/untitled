@@ -1,10 +1,10 @@
 #pragma once
 
-#include <UntitledPrecomp.hpp>
+#include "UntitledPrecomp.hpp"
 
-#include <ErrorDetailsPane.hpp>
-#include <LabeledTextCtrl.hpp>
-#include <wx/commandlinkbutton.h>
+#include "ErrorDetailsPane.hpp"
+#include "LabeledTextCtrl.hpp"
+#include "wx/commandlinkbutton.h"
 
 class StartupPanel : public wxPanel {
   public:

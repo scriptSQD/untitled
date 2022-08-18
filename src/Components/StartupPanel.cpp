@@ -1,4 +1,4 @@
-#include <StartupPanel.hpp>
+#include "Components/StartupPanel.hpp"
 
 StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
     : wxPanel(parent, id),
@@ -12,6 +12,11 @@ StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
                          "This is required to continue. Please "
                          "fill out required information below:",
                          wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+
+    /* TODO: Make more flexible database connection interface.
+     * Add user and password fields, split connection string into host, port,
+     * database and additional params.
+     */
 
     this->m_Input = new LabeledTextCtrl(this, wxID_ANY,
                                         "Connection string:", wxSize(500, 30));

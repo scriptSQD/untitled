@@ -1,8 +1,8 @@
 #pragma once
 
-#include <UntitledPrecomp.hpp>
+#include "UntitledPrecomp.hpp"
 
-#include <wx/collpane.h>
+#include "wx/collpane.h"
 
 class ErrorDetailsPane : public wxCollapsiblePane {
   public:

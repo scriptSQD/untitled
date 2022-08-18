@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/fmt" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/deps/libpqxx" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/deps/untitled-argparser" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/deps/untitled-logger" vcs="Git" />

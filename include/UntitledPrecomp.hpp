@@ -7,6 +7,7 @@
 #include <wx/wx.h>
 #endif
 
+#include <Structures/DatabaseMetadata.hpp>
 #include <Structures/DatabaseTable.hpp>
 
 #include <algorithm>
@@ -22,9 +23,22 @@
 #include <utility>
 #include <vector>
 
-#include <ExceptionHandler.hpp>
-#include <Fonts.hpp>
+#include "Utilities/Utils.hpp"
+
+#include "Utilities/ExceptionHandler.hpp"
+#include "Utilities/Fonts.hpp"
 #include <Logger.hpp>
 #include <PQGlobal.hpp>
 
+#include <fmt/core.h>
+
 enum { None = 0, IdChangeDb, IdConnect, IdErrorDetails, IdReloadSchoolList };
+
+struct HashDatabaseTableLocation
+    : public std::unary_function<DatabaseMetadata::TableLocation, size_t> {
+    size_t operator()(const DatabaseMetadata::TableLocation &key) const {
+        const auto &[schema, table] = key;
+        return std::hash<std::string>{}(schema) ^
+               (std::hash<std::string>{}(table) << 1);
+    }
+};

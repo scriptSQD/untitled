@@ -1,4 +1,4 @@
-#include <LabeledTextCtrl.hpp>
+#include "Components/LabeledTextCtrl.hpp"
 
 LabeledTextCtrl::LabeledTextCtrl(wxWindow *parent, wxWindowID id,
                                  const wxString &label, const wxSize &ctrlSize,
