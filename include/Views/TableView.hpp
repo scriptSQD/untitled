@@ -1,14 +1,14 @@
 #pragma once
 
-#include <UntitledPrecomp.hpp>
+#include "UntitledPrecomp.hpp"
 #include <any>
 #include <optional>
 
-#include <wx/listctrl.h>
+#include "wx/listctrl.h"
 
-class TabMain : public wxPanel {
+class TableView : public wxPanel {
   public:
-    TabMain(wxWindow *parent, wxWindowID winid, DatabaseMetadata::TableLocation table);
+    TableView(wxWindow *parent, wxWindowID winid, DatabaseMetadata::TableLocation table);
     void UpdateTable() { PopulateItemListCtrl(); };
 
   private:

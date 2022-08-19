@@ -1,8 +1,8 @@
-#include "Tabs/TabMain.hpp"
+#include "Views/TableView.hpp"
 
 #include <utility>
 
-TabMain::TabMain(wxWindow *parent, wxWindowID winid,
+TableView::TableView(wxWindow *parent, wxWindowID winid,
                  DatabaseMetadata::TableLocation table)
     : wxPanel(parent, winid), m_Table(std::move(table)) {
 
@@ -15,12 +15,13 @@ TabMain::TabMain(wxWindow *parent, wxWindowID winid,
         this, wxID_ANY,
         "Below you will see the data stored in one of the database tables!");
 
-    m_ReloadButton = new wxButton(this, IdReloadSchoolList, "Reload list.");
+    m_ReloadButton = new wxButton(this, IdReloadSchoolList, "Reload list");
     m_ReloadButton->SetToolTip("Query database for fresh data");
 
-    m_ReloadButton->Bind(wxEVT_BUTTON, &TabMain::ReloadItemList, this);
+    m_ReloadButton->Bind(wxEVT_BUTTON, &TableView::ReloadItemList, this);
 
     m_ListView = new wxListView(this, wxID_ANY);
+    m_ListView->SetWindowStyle(wxLC_EDIT_LABELS | wxLC_REPORT);
 
     // Fill our UI with data.
     this->PopulateItemListCtrl();
@@ -40,12 +41,12 @@ TabMain::TabMain(wxWindow *parent, wxWindowID winid,
     });
 }
 
-void TabMain::RetrieveTableData() {
+void TableView::RetrieveTableData() {
     const auto &[schema, table] = m_Table;
     m_DataList = PQGlobal::ParseTable(schema, table);
 }
 
-void TabMain::PopulateItemListCtrl() {
+void TableView::PopulateItemListCtrl() {
     this->RetrieveTableData();
     m_ListView->ClearAll();
 
@@ -66,13 +67,13 @@ void TabMain::PopulateItemListCtrl() {
     }
 }
 
-void TabMain::ReloadItemList(wxCommandEvent &evt) {
+void TableView::ReloadItemList(wxCommandEvent &evt) {
     this->PopulateItemListCtrl();
 }
 
-void TabMain::OnItemSelected(wxListEvent &evt) {}
+void TableView::OnItemSelected(wxListEvent &evt) {}
 
-std::string TabMain::CapitalizeString(const std::string &source) {
+std::string TableView::CapitalizeString(const std::string &source) {
     if (source.length() == 0)
         return "";
 

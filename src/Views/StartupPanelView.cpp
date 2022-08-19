@@ -1,8 +1,8 @@
-#include "Components/StartupPanel.hpp"
+#include "Views/StartupPanelView.hpp"
 
-StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
+StartupPanelView::StartupPanelView(wxWindow *parent, wxWindowID id)
     : wxPanel(parent, id),
-      sizer(new wxStaticBoxSizer(wxVERTICAL, this, "Quick start")) {
+      m_Sizer(new wxStaticBoxSizer(wxVERTICAL, this, "Quick start")) {
     this->m_Header = new wxStaticText(
         this, wxID_ANY, "You are not connected to any database!",
         wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
@@ -13,36 +13,35 @@ StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
                          "fill out required information below:",
                          wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
 
-    /* TODO: Make more flexible database connection interface.
-     * Add user and password fields, split connection string into host, port,
-     * database and additional params.
-     */
+    m_ConnectionView = new DatabaseConnectionView(this);
 
-    this->m_Input = new LabeledTextCtrl(this, wxID_ANY,
-                                        "Connection string:", wxSize(500, 30));
-
-    this->m_ConnectButton = new wxButton(this, IdConnect, "Connect!");
+    m_ConnectButton = new wxButton(this, IdConnect, "Connect");
 
     // *most likely* temporary solution for error details
     this->m_ErrorDetailsButton = new wxCommandLinkButton(
         this, IdErrorDetails, "Error details:", "Get error details.");
     m_ErrorDetailsButton->Disable();
+    m_ErrorDetailsButton->Hide();
 
     m_Header->SetFont(UntitledFonts::FONT_H1);
     m_Header->Wrap(m_Header->GetCharWidth() * 28);
     m_SubHeader->SetFont(UntitledFonts::FONT_H2);
     m_SubHeader->Wrap(m_SubHeader->GetCharWidth() * 32);
 
-    sizer->Add(m_Header, 0, wxALIGN_CENTER | wxALL, 4);
-    sizer->Add(m_SubHeader, 0, wxALIGN_CENTER | wxALL, 4);
-    sizer->Add(m_Input, 0, wxALIGN_CENTER | wxALL, 4);
-    sizer->Add(m_ConnectButton, 0, wxALIGN_CENTER | wxALL, 4);
-    sizer->Add(m_ErrorDetailsButton, 0, wxALIGN_CENTER | wxALL, 4);
+    m_Sizer->Add(m_Header, 0, wxALIGN_CENTER | wxALL, 4);
+    m_Sizer->Add(m_SubHeader, 0, wxALIGN_CENTER | wxALL, 4);
 
-    this->SetSizerAndFit(sizer);
+    m_Sizer->Add(m_ConnectionView, 0, wxALIGN_CENTER | wxALL | wxSHRINK, 4);
 
-    m_ConnectButton->Bind(wxEVT_BUTTON, &StartupPanel::OnConnectButton, this,
-                          IdConnect);
+    m_Sizer->Add(m_ConnectButton, 0, wxALIGN_CENTER | wxALL, 4);
+    m_Sizer->Add(m_ErrorDetailsButton, 0,
+                 wxALIGN_CENTER | wxALL | wxRESERVE_SPACE_EVEN_IF_HIDDEN, 4);
+
+    this->SetSizerAndFit(m_Sizer);
+
+    m_ConnectButton->Bind(wxEVT_BUTTON, &StartupPanelView::OnConnectButton,
+                          this, IdConnect);
+
     m_ErrorDetailsButton->Bind(
         wxEVT_BUTTON,
         [this](wxCommandEvent &evt) {
@@ -51,27 +50,27 @@ StartupPanel::StartupPanel(wxWindow *parent, wxWindowID id)
         IdErrorDetails);
 }
 
-void StartupPanel::OnConnectButton(wxCommandEvent &evt) {
+void StartupPanelView::OnConnectButton(wxCommandEvent &evt) {
     SQD_LOG("OnConnectButton: Enter handler.");
-    if (m_Input->GetInput().empty()) {
-        SQD_LOG("OnConnectButton: User provided no connection string");
-        return;
-    }
 
-    auto [success, errorDetails] =
-        PQGlobal::MakePQConnection(m_Input->GetInput().ToStdString());
+    const auto &connStr =
+        m_ConnectionView->GetProvider()->GetConnectionString();
+
+    auto [success, errorDetails] = PQGlobal::MakePQConnection(connStr);
 
     if (!success) {
         wxMessageBox(
             "Connection failed!\nCheck out the details on button below.",
             "Failure.");
         m_ErrorDetails = errorDetails;
+        m_ErrorDetailsButton->Show();
         m_ErrorDetailsButton->Enable();
 
         return;
     }
 
-    m_Input->ResetInput();
+    m_ConnectionView->ClearInput();
+    m_ErrorDetailsButton->Hide();
     m_ErrorDetailsButton->Disable();
     m_ErrorDetails = "";
 }

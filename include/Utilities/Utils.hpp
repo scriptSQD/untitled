@@ -1,5 +1,9 @@
 #pragma once
 
+#include <wx/bitmap.h>
+#include <wx/bmpbndl.h>
+#include <wx/vector.h>
+
 #include <functional>
 #include <iostream>
 #include <optional>
@@ -20,4 +24,18 @@ class Utils {
 
         return std::invoke(functor, optional.value());
     };
+
+    static wxBitmapBundle CreateBitmapBundle(std::string_view baseFilename,
+                                             std::string_view extension,
+                                             const wxSize &size = wxSize(28,
+                                                                         28));
+};
+
+struct HashDatabaseTableLocation
+    : public std::function<size_t(const DatabaseMetadata::TableLocation &)> {
+    size_t operator()(const DatabaseMetadata::TableLocation &key) const {
+        const auto &[schema, table] = key;
+        return std::hash<std::string>{}(schema) ^
+               (std::hash<std::string>{}(table) << 1);
+    }
 };

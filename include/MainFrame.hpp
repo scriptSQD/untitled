@@ -2,7 +2,7 @@
 
 #include <UntitledPrecomp.hpp>
 
-#include "Components/StartupPanel.hpp"
+#include "Views/StartupPanelView.hpp"
 #include <Tabs/Tabs.hpp>
 
 class UntitledFrame : public wxFrame {
@@ -13,7 +13,7 @@ class UntitledFrame : public wxFrame {
                   const wxSize &size = wxDefaultSize);
 
   private:
-    StartupPanel *startupPanel = nullptr;
+    StartupPanelView *startupPanel = nullptr;
     Tabs *managementUi = nullptr;
     wxBoxSizer *sizer;
 

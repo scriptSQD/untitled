@@ -1,26 +1,25 @@
 #pragma once
 
-#include "wx/wxprec.h"
+#include <UntitledPrecomp.hpp>
 
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
-
-#include "Tabs/TabMain.hpp"
+#include "Components/DatabaseTreeCtrl.hpp"
+#include "Views/TableView.hpp"
 
 #include "wx/aui/auibook.h"
 #include "wx/aui/framemanager.h"
 
-#include <Structures/DatabaseMetadata.hpp>
-#include <Structures/DatabaseTable.hpp>
 
 class Tabs : public wxPanel {
   public:
     explicit Tabs(wxWindow *parent, wxWindowID winid = wxID_ANY);
 
-  
+  private:
+    void OnTreeItemSelected(wxTreeEvent &evt);
 
   private:
+    DatabaseTreeCtrl *m_DatabaseTreeCtrl;
+    wxAuiPaneInfo *m_DatabaseTreePaneInfo;
+
     DatabaseMetadata m_DatabaseMetadata;
     std::unordered_map<DatabaseMetadata::TableLocation, int,
                        HashDatabaseTableLocation>

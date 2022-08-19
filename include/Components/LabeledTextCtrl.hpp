@@ -9,7 +9,9 @@ class LabeledTextCtrl : public wxPanel {
      * wxTextCtrl to look like a monolithic input field.
      */
     LabeledTextCtrl(wxWindow *parent, wxWindowID id, const wxString &label,
-                    const wxSize &ctrlSize = wxDefaultSize, const int &gap = 3);
+                    const wxString &value = wxEmptyString,
+                    const wxSize &ctrlSize = wxDefaultSize,
+                    const long &style = 0, const int &gap = 3);
 
     void SetDirection(const wxOrientation &orient);
     void ResetInput();

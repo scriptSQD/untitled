@@ -2,21 +2,22 @@
 
 #include "UntitledPrecomp.hpp"
 
-#include "ErrorDetailsPane.hpp"
-#include "LabeledTextCtrl.hpp"
+#include "Views/DatabaseConnectionView.hpp"
+
 #include "wx/commandlinkbutton.h"
 
-class StartupPanel : public wxPanel {
+class StartupPanelView : public wxPanel {
   public:
-    StartupPanel(wxWindow *parent, wxWindowID id);
+    StartupPanelView(wxWindow *parent, wxWindowID id);
 
   private:
-    wxStaticBoxSizer *sizer;
+    wxStaticBoxSizer *m_Sizer;
+
+    DatabaseConnectionView *m_ConnectionView;
 
     wxStaticText *m_Header, *m_SubHeader;
     wxButton *m_ConnectButton;
     wxCommandLinkButton *m_ErrorDetailsButton;
-    LabeledTextCtrl *m_Input;
 
     std::string m_ErrorDetails;
 

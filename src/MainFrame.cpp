@@ -4,12 +4,21 @@ UntitledFrame::UntitledFrame(wxWindow *parent, wxWindowID id,
                              const wxString &title, const wxPoint &pos,
                              const wxSize &size)
     : wxFrame(parent, id, title, pos, size) {
-    auto *menu = new wxMenu;
-    menu->Append(IdChangeDb, "Change database\tCtrl+D");
-    menu->Append(wxID_CLOSE, "Quit\tCtrl+Q");
+    auto *fileMenu = new wxMenu();
+    fileMenu->Append(IdChangeDb, "New connection\tCtrl+N");
+    fileMenu->Append(wxID_CLOSE, "Quit\tCtrl+Q");
+
+    auto *toggleViewsMenu = new wxMenu();
+    toggleViewsMenu->AppendCheckItem(IdToggleDatabaseTree, "Database tree",
+                                     "If not toggled, database tree will be "
+                                     "hidden from application viewport.");
+
+    auto *viewMenu = new wxMenu();
+    viewMenu->AppendSubMenu(toggleViewsMenu, "Toggle views");
 
     auto *menubar = new wxMenuBar;
-    menubar->Append(menu, "File");
+    menubar->Append(fileMenu, "File");
+    menubar->Append(viewMenu, "View");
 
     this->SetMenuBar(menubar);
 
@@ -20,7 +29,7 @@ UntitledFrame::UntitledFrame(wxWindow *parent, wxWindowID id,
         sizer->Add(managementUi, 1, wxEXPAND);
         this->FitInside();
     } else {
-        this->startupPanel = new StartupPanel(this, wxID_ANY);
+        this->startupPanel = new StartupPanelView(this, wxID_ANY);
         sizer->Add(startupPanel, 1, wxEXPAND | wxALL, 3);
         this->FitInside();
     }
@@ -82,7 +91,7 @@ void UntitledFrame::OnConnectionFailed() {
     }
 
     if (startupPanel == nullptr) {
-        startupPanel = new StartupPanel(this, wxID_ANY);
+        startupPanel = new StartupPanelView(this, wxID_ANY);
         sizer->Add(startupPanel, 1, wxEXPAND | wxALL, 3);
         sizer->Layout();
 

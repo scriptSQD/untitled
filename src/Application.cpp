@@ -43,7 +43,7 @@ bool UntitledApp::OnInit() {
     this->SetAppName("sqd.untitled.manager");
 
     auto *frame = new UntitledFrame(
-        nullptr, wxID_ANY, "Untitled - a scriptSQD's student manager.");
+        nullptr, wxID_ANY, "Untitled - a scriptSQD's database manager.");
     frame->Show();
 
     return true;

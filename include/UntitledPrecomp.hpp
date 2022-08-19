@@ -32,13 +32,20 @@
 
 #include <fmt/core.h>
 
-enum { None = 0, IdChangeDb, IdConnect, IdErrorDetails, IdReloadSchoolList };
+enum {
+    None = 0,
+    IdChangeDb,
+    IdConnect,
+    IdErrorDetails,
+    IdReloadSchoolList,
 
-struct HashDatabaseTableLocation
-    : public std::function<size_t(const DatabaseMetadata::TableLocation &)> {
-    size_t operator()(const DatabaseMetadata::TableLocation &key) const {
-        const auto &[schema, table] = key;
-        return std::hash<std::string>{}(schema) ^
-               (std::hash<std::string>{}(table) << 1);
-    }
+    IdProviderWizard,
+    IdProviderRaw,
+
+    IdToggleDatabaseTree,
+
+    IdDatabaseTreeAdd,
+    IdDatabaseTreeDelete,
+    IdDatabaseTreeSync
+
 };
