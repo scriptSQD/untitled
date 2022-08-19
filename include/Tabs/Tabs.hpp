@@ -11,9 +11,6 @@
 #include "wx/aui/auibook.h"
 #include "wx/aui/framemanager.h"
 
-#include "wx/treectrl.h"
-#include "wx/treebase.h"
-
 #include <Structures/DatabaseMetadata.hpp>
 #include <Structures/DatabaseTable.hpp>
 
@@ -21,9 +18,7 @@ class Tabs : public wxPanel {
   public:
     explicit Tabs(wxWindow *parent, wxWindowID winid = wxID_ANY);
 
-  private:
-    void IntrospectDatabase();
-    void PopulateDatabaseTree();
+  
 
   private:
     DatabaseMetadata m_DatabaseMetadata;
@@ -32,6 +27,5 @@ class Tabs : public wxPanel {
         m_TableViews;
 
     wxAuiManager *m_AuiMgr;
-    wxTreeCtrl *m_DatabaseTree;
     wxAuiNotebook *m_ViewTabs;
 };

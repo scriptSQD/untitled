@@ -76,7 +76,7 @@ std::string TabMain::CapitalizeString(const std::string &source) {
     if (source.length() == 0)
         return "";
 
-    auto ret = source;
+    std::string ret = source;
     ret[0] = (char)toupper(ret[0]);
 
     return ret;

@@ -4,18 +4,21 @@ Tabs::Tabs(wxWindow *parent, wxWindowID winid) : wxPanel(parent, winid) {
     m_AuiMgr =
         new wxAuiManager(this, wxAUI_MGR_DEFAULT | wxAUI_MGR_ALLOW_ACTIVE_PANE);
 
-    m_DatabaseTree = new wxTreeCtrl(this);
-    PopulateDatabaseTree();
+   /* m_DatabaseTree =
+        new wxTreeCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                       wxTR_DEFAULT_STYLE | wxTR_HIDE_ROOT);*/
+    //PopulateDatabaseTree();
 
-    m_ViewTabs = new wxAuiNotebook(this);
+    m_ViewTabs =
+        new wxAuiNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 
-    m_AuiMgr->AddPane(m_DatabaseTree, wxLEFT, "Database tree");
-    m_AuiMgr->GetPane(m_DatabaseTree).BestSize(wxSize(250, -1));
+    //m_AuiMgr->AddPane(m_DatabaseTree, wxLEFT, "Database tree");
+    //m_AuiMgr->GetPane(m_DatabaseTree).BestSize(wxSize(250, -1));
     m_AuiMgr->AddPane(m_ViewTabs, wxCENTER, "View tabs");
 
     m_AuiMgr->Update();
 
-    m_DatabaseTree->Bind(wxEVT_TREE_ITEM_ACTIVATED, [this](wxTreeEvent &evt) {
+    /*m_DatabaseTree->Bind(wxEVT_TREE_ITEM_ACTIVATED, [this](wxTreeEvent &evt) {
         auto parent = m_DatabaseTree->GetItemParent(evt.GetItem());
         if (!parent.IsOk()) {
             evt.Skip();
@@ -46,28 +49,10 @@ Tabs::Tabs(wxWindow *parent, wxWindowID winid) : wxPanel(parent, winid) {
             m_ViewTabs->SetSelection(
                 m_ViewTabs->GetPageIndex(FindWindowById(id)));
         }
-    });
+    });*/
 
     m_ViewTabs->Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, [](wxAuiNotebookEvent &evt) {
         SQD_LOG(fmt::format("AuiNotebook Page Close with id: {}", evt.GetId()));
         evt.Veto();
     });
-}
-
-void Tabs::IntrospectDatabase() {
-    m_DatabaseMetadata = PQGlobal::IntrospectDatabase();
-}
-
-void Tabs::PopulateDatabaseTree() {
-    IntrospectDatabase();
-
-    for (const auto &schema : m_DatabaseMetadata.GetSchemas()) {
-        auto rootId = m_DatabaseTree->AddRoot(schema);
-        m_DatabaseTree->SetToolTip("Some tooltip");
-
-        for (const auto &table :
-             m_DatabaseMetadata.GetTablesForSchema(schema)) {
-            m_DatabaseTree->AppendItem(rootId, table);
-        }
-    }
 }
