@@ -15,7 +15,8 @@
 class TableNodeData : public wxTreeItemData {
   public:
     explicit TableNodeData(int identifier)
-        : m_ConnectionIdentifier(identifier), m_IsConnectionNode(false){};
+        : m_ConnectionIdentifier(identifier), m_IsConnectionNode(false),
+          m_IsTableNode(false){};
     explicit TableNodeData(int identifier, bool isConnectionNode,
                            bool isTableNode)
         : m_ConnectionIdentifier(identifier),

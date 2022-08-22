@@ -102,20 +102,16 @@ void DatabaseTreeCtrl::PopulateIcons() {
     std::string tableBmpPath;
 
     wxSystemAppearance systemAppearance = wxSystemSettings::GetAppearance();
-    if (systemAppearance.IsDark()) {
-        connectionBmpPath =
-            fmt::format("resources/assets/dark/connection-hidpi.png");
-        databaseBmpPath =
-            fmt::format("resources/assets/dark/database-hidpi.png");
-        schemaBmpPath = fmt::format("resources/assets/dark/schema-hidpi.png");
-        tableBmpPath = fmt::format("resources/assets/dark/table-hidpi.png");
+    if (systemAppearance.IsUsingDarkBackground()) {
+        connectionBmpPath = "resources/assets/dark/connection-hidpi.png";
+        databaseBmpPath = "resources/assets/dark/database-hidpi.png";
+        schemaBmpPath = "resources/assets/dark/schema-hidpi.png";
+        tableBmpPath = "resources/assets/dark/table-hidpi.png";
     } else {
-        connectionBmpPath =
-            fmt::format("resources/assets/light/connection-hidpi.png");
-        databaseBmpPath =
-            fmt::format("resources/assets/light/database-hidpi.png");
-        schemaBmpPath = fmt::format("resources/assets/light/schema-hidpi.png");
-        tableBmpPath = fmt::format("resources/assets/light/table-hidpi.png");
+        connectionBmpPath = "resources/assets/light/connection-hidpi.png";
+        databaseBmpPath = "resources/assets/light/database-hidpi.png";
+        schemaBmpPath = "resources/assets/light/schema-hidpi.png";
+        tableBmpPath = "resources/assets/light/table-hidpi.png";
     }
 
     for (const auto &icon :
@@ -132,14 +128,14 @@ void DatabaseTreeCtrl::ConstructQuickActionsPanel() {
     std::string syncBmpPath;
 
     wxSystemAppearance systemAppearance = wxSystemSettings::GetAppearance();
-    if (systemAppearance.IsDark()) {
-        addBmpPath = fmt::format("resources/assets/dark/add");
-        deleteBmpPath = fmt::format("resources/assets/dark/delete_forever");
-        syncBmpPath = fmt::format("resources/assets/dark/sync");
+    if (systemAppearance.IsUsingDarkBackground()) {
+        addBmpPath = "resources/assets/dark/add";
+        deleteBmpPath = "resources/assets/dark/delete_forever";
+        syncBmpPath = "resources/assets/dark/sync";
     } else {
-        addBmpPath = fmt::format("resources/assets/light/add");
-        deleteBmpPath = fmt::format("resources/assets/light/delete_forever");
-        syncBmpPath = fmt::format("resources/assets/light/sync");
+        addBmpPath = "resources/assets/light/add";
+        deleteBmpPath = "resources/assets/light/delete_forever";
+        syncBmpPath = "resources/assets/light/sync";
     }
 
     const auto &addBmpBundle =

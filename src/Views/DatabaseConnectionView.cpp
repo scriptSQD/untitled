@@ -6,7 +6,7 @@ DatabaseConnectionView::DatabaseConnectionView(wxWindow *parent)
 
     m_RadioSizer = new wxBoxSizer(wxHORIZONTAL);
 
-    m_WizardRadio = new wxRadioButton(this, IdProviderWizard, "Wizard");
+    m_WizardRadio = new wxRadioButton(this, IdProviderWizard, "Wizard" ,wxDefaultPosition, wxDefaultSize, wxRB_GROUP); 
     m_ConnStrRadio =
         new wxRadioButton(this, IdProviderRaw, "Connection string");
 
@@ -35,5 +35,7 @@ DatabaseConnectionView::DatabaseConnectionView(wxWindow *parent)
 
         m_Wizard->Show(evt.GetId() == IdProviderWizard);
         m_ConnStringInput->Show(evt.GetId() == IdProviderRaw);
+
+        m_Sizer->Layout();
     });
 }
