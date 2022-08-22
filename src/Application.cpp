@@ -24,23 +24,24 @@ bool UntitledApp::OnInit() {
 
         if (verbose) {
             SQD::Logger::EnableLogger();
-            SQD_LOG("Enabled logger from --verbose flag.");
+            SQD_LOG("Enabled verbose logger.");
         }
 
         if (!connectionString.empty()) {
-            SQD_LOG("Connecting to PostgreSQL via connection string: " +
+            SQD_LOG("Connecting to PostgreSQL via connection string upon app"
+                    "initialization: " +
                     connectionString);
-            if (!PQGlobal::MakePQConnection(connectionString).first) {
-                SQD_WARN("Connection to PGSQL failed.");
-            }
+            PQGlobal::AddConnection(connectionString, "Base connection");
         }
 
         delete parser;
     }
 
     // Set this so X11 can target this application
-    // By default is 'untitled' and can cause mess
+    // By default is 'untitled' and can cause confusion
     this->SetAppName("sqd.untitled.manager");
+
+    wxInitAllImageHandlers();
 
     auto *frame = new UntitledFrame(
         nullptr, wxID_ANY, "Untitled - a scriptSQD's database manager.");

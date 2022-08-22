@@ -10,7 +10,14 @@ class DatabaseConnectionView : public wxPanel {
   public:
     explicit DatabaseConnectionView(wxWindow *parent);
 
-    IConnectionStringProvider *GetProvider() { return m_CurrentProvider; }
+    ConnectionInfoProvider *GetProvider() { return m_CurrentProvider; }
+
+    std::string GetConnectionString() {
+        return GetProvider()->GetConnectionString();
+    }
+    std::string GetConnectionDisplayName() {
+        return GetProvider()->GetConnectionDisplayName();
+    }
 
     void ClearInput() { m_CurrentProvider->ClearInput(); }
 
@@ -22,5 +29,5 @@ class DatabaseConnectionView : public wxPanel {
     DatabaseConnectionWizard *m_Wizard;
     ConnectionStringInput *m_ConnStringInput;
 
-    IConnectionStringProvider *m_CurrentProvider;
+    ConnectionInfoProvider *m_CurrentProvider;
 };

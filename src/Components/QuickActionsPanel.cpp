@@ -1,9 +1,9 @@
 #include <Components/QuickActionsPanel.hpp>
 #include <utility>
 
-QAPanel::QAPanel(wxWindow *parent, PanelControls buttonsWithCallbacks)
+QAPanel::QAPanel(wxWindow *parent, PanelControls buttons)
     : wxScrolledWindow(parent),
-      m_ButtonsWithCallbacks(std::move(buttonsWithCallbacks)) {
+      m_ButtonsWithCallbacks(std::move(buttons)) {
     m_Sizer = new wxBoxSizer(wxHORIZONTAL);
 
     for (auto button : m_ButtonsWithCallbacks) {

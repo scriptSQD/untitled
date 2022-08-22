@@ -53,12 +53,12 @@ StartupPanelView::StartupPanelView(wxWindow *parent, wxWindowID id)
 void StartupPanelView::OnConnectButton(wxCommandEvent &evt) {
     SQD_LOG("OnConnectButton: Enter handler.");
 
-    const auto &connStr =
-        m_ConnectionView->GetProvider()->GetConnectionString();
+    const auto &connStr = m_ConnectionView->GetConnectionString();
+    const auto &connDisplayName = m_ConnectionView->GetConnectionDisplayName();
 
-    auto [success, errorDetails] = PQGlobal::MakePQConnection(connStr);
+    auto [id, errorDetails] = PQGlobal::AddConnection(connStr, connDisplayName);
 
-    if (!success) {
+    if (id == -1) {
         wxMessageBox(
             "Connection failed!\nCheck out the details on button below.",
             "Failure.");

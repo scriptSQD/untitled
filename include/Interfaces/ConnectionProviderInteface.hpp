@@ -2,10 +2,12 @@
 
 #include <string>
 
-class IConnectionStringProvider {
+class ConnectionInfoProvider {
   public:
-    IConnectionStringProvider() = default;
+    ConnectionInfoProvider() = default;
 
     [[nodiscard]] virtual std::string GetConnectionString() const = 0;
+    [[nodiscard]] virtual std::string GetConnectionDisplayName() const = 0;
+
     virtual void ClearInput() = 0;
 };

@@ -7,10 +7,9 @@ std::vector<std::string> DatabaseMetadata::GetSchemas() const {
 void DatabaseMetadata::AddSchema(std::string_view name) {
     m_SchemaList.emplace_back(name);
 }
-std::string DatabaseMetadata::GetCurrentUser() const { return m_CurrentUser; }
 
 std::tuple<std::string, std::string>
-DatabaseMetadata::GetTableWithSchema(std::string_view table) {
+DatabaseMetadata::GetTableWithSchema(std::string_view table) const {
     for (const auto &schema : m_Tables) {
         const auto [schemaName, tableName] = schema;
         if (tableName == table)

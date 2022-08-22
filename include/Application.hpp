@@ -14,8 +14,8 @@ class UntitledApp : public wxApp {
         SQD::Logger::Log("Destructing main application object.");
         try {
             // Other stuff should go in here for cleanup process
-            if (PQGlobal::IsConnectionOpen()) {
-                PQGlobal::CloseConnection();
+            if (PQGlobal::HasConnectionsOpen()) {
+                PQGlobal::CloseAllConnections();
             }
         } catch (...) {
             SQD::Logger::Log(

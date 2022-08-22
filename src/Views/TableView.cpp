@@ -3,7 +3,7 @@
 #include <utility>
 
 TableView::TableView(wxWindow *parent, wxWindowID winid,
-                 DatabaseMetadata::TableLocation table)
+                     DatabaseMetadata::TableLocation table)
     : wxPanel(parent, winid), m_Table(std::move(table)) {
 
     m_MainSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -42,8 +42,8 @@ TableView::TableView(wxWindow *parent, wxWindowID winid,
 }
 
 void TableView::RetrieveTableData() {
-    const auto &[schema, table] = m_Table;
-    m_DataList = PQGlobal::ParseTable(schema, table);
+    const auto &[id, schema, table] = m_Table;
+    m_DataList = PQGlobal::ParseTable(id, schema, table);
 }
 
 void TableView::PopulateItemListCtrl() {

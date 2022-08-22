@@ -5,7 +5,7 @@ UntitledFrame::UntitledFrame(wxWindow *parent, wxWindowID id,
                              const wxSize &size)
     : wxFrame(parent, id, title, pos, size) {
     auto *fileMenu = new wxMenu();
-    fileMenu->Append(IdChangeDb, "New connection\tCtrl+N");
+    fileMenu->Append(IdAddConnection, "New connection\tCtrl+N");
     fileMenu->Append(wxID_CLOSE, "Quit\tCtrl+Q");
 
     auto *toggleViewsMenu = new wxMenu();
@@ -22,24 +22,19 @@ UntitledFrame::UntitledFrame(wxWindow *parent, wxWindowID id,
 
     this->SetMenuBar(menubar);
 
-    this->sizer = new wxBoxSizer(wxVERTICAL);
+    this->m_Sizer = new wxBoxSizer(wxVERTICAL);
 
-    if (PQGlobal::IsConnectionOpen()) {
-        this->managementUi = new Tabs(this, wxID_ANY);
-        sizer->Add(managementUi, 1, wxEXPAND);
-        this->FitInside();
-    } else {
-        this->startupPanel = new StartupPanelView(this, wxID_ANY);
-        sizer->Add(startupPanel, 1, wxEXPAND | wxALL, 3);
-        this->FitInside();
-    }
+    this->m_ManagerView = new ManagerView(this, wxID_ANY);
+    m_Sizer->Add(m_ManagerView, 1, wxEXPAND);
 
-    this->SetSizerAndFit(sizer);
+    // If connection was initialized on app startup, process callbacks
+    // that are set by ManagerView
+    PQGlobal::RecheckConnectionsOpen();
 
-    this->Bind(wxEVT_MENU, &UntitledFrame::ChangeDb, IdChangeDb);
+    this->SetSizerAndFit(m_Sizer);
+
+    this->Bind(wxEVT_MENU, &UntitledFrame::AddConnection, IdAddConnection);
     this->Bind(wxEVT_MENU, &UntitledFrame::OnQuit, this, wxID_CLOSE);
-    PQGlobal::OnConnected([this] { OnConnected(); });
-    PQGlobal::OnConnectionFailed([this] { OnConnectionFailed(); });
 }
 
 void UntitledFrame::OnQuit(wxCommandEvent &evt) {
@@ -47,63 +42,8 @@ void UntitledFrame::OnQuit(wxCommandEvent &evt) {
     this->Close(true);
 }
 
-void UntitledFrame::ChangeDb(wxCommandEvent &evt) {
-    SQD_LOG("ChangeDb: enter function");
-    wxTextEntryDialog dlg(nullptr, "Enter new database connection string:",
-                          "Connect to database", "postgresql://localhost");
+void UntitledFrame::AddConnection(wxCommandEvent &evt) {
+    SQD_LOG("AddConnection: enter handler.");
 
-    if (dlg.ShowModal() == wxID_OK) {
-        SQD_LOG("ChangeDb: Got input from modal dialog: " +
-                dlg.GetValue().ToStdString());
-
-        if (!PQGlobal::MakePQConnection(dlg.GetValue().ToStdString()).first)
-            wxMessageBox("Connection failed!");
-
-    } else
-        SQD_LOG("ChangeDb: Input abandoned.");
-
-    SQD_LOG("ChangeDb: Dialog processed.");
-}
-
-void UntitledFrame::OnConnected() {
-    SQD_LOG("OnConnected: entering handler.");
-    if (startupPanel != nullptr) {
-        startupPanel->Show(false);
-        ClearSizer();
-    }
-
-    if (managementUi == nullptr) {
-        managementUi = new Tabs(this, wxID_ANY);
-        sizer->Add(managementUi, 1, wxEXPAND);
-        sizer->Layout();
-
-        this->Layout();
-    }
-
-    if (!managementUi->IsShown())
-        managementUi->Show();
-}
-
-void UntitledFrame::OnConnectionFailed() {
-    if (managementUi != nullptr) {
-        managementUi->Show(false);
-        ClearSizer();
-    }
-
-    if (startupPanel == nullptr) {
-        startupPanel = new StartupPanelView(this, wxID_ANY);
-        sizer->Add(startupPanel, 1, wxEXPAND | wxALL, 3);
-        sizer->Layout();
-
-        this->Layout();
-    }
-
-    if (!startupPanel->IsShown())
-        startupPanel->Show();
-}
-
-void UntitledFrame::ClearSizer() {
-    for (int i = 0; i < sizer->GetChildren().size(); i++) {
-        sizer->Remove(i);
-    }
+    new DatabaseConnectionDialog();
 }

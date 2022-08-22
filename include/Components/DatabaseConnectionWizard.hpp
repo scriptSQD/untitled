@@ -5,11 +5,12 @@
 #include "Interfaces/ConnectionProviderInteface.hpp"
 #include <Components/LabeledTextCtrl.hpp>
 
-class DatabaseConnectionWizard : public wxPanel, public IConnectionStringProvider {
+class DatabaseConnectionWizard : public wxPanel, public ConnectionInfoProvider {
   public:
     explicit DatabaseConnectionWizard(wxWindow *parent);
 
     [[nodiscard]] std::string GetConnectionString() const override;
+    [[nodiscard]] std::string GetConnectionDisplayName() const override;
 
     void ClearInput() override;
 

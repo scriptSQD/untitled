@@ -9,7 +9,9 @@ DatabaseConnectionWizard::DatabaseConnectionWizard(wxWindow *parent)
     m_MiscSizer = new wxBoxSizer(wxHORIZONTAL);
 
     m_ConnectionName = new LabeledTextCtrl(
-        this, wxID_ANY, "Connection name:", wxEmptyString, wxSize(450, -1));
+        this, wxID_ANY, "Connection name:",
+        fmt::format("New connection {}", PQGlobal::GetLastConnectionId()),
+        wxSize(450, -1));
 
     m_Hostname = new LabeledTextCtrl(this, wxID_ANY, "Hostname:", "localhost",
                                      wxSize(370, -1));
@@ -75,6 +77,14 @@ std::string DatabaseConnectionWizard::GetConnectionString() const {
                ? fmt::format("{}://{}{}", protocol, address, misc)
                : fmt::format("{}://{}@{}{}", protocol, credentials, address,
                              misc);
+}
+
+std::string DatabaseConnectionWizard::GetConnectionDisplayName() const {
+    if (auto n = m_ConnectionName->GetInput().ToStdString(); !n.empty())
+        return n;
+
+    return fmt::format("Untitled connection {}",
+                       PQGlobal::GetLastConnectionId());
 }
 
 void DatabaseConnectionWizard::ClearInput() {

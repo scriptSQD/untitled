@@ -13,29 +13,34 @@ class Utils {
   public:
     static void PrintHelp();
 
-    template <typename OT>
-    inline static void HandleOptional(
-        OT optional,
-        std::function<void(const typename OT::value_type &)> functor) {
+    template <typename RT, typename OT>
+    inline static RT
+    HandleOptional(OT optional,
+                   std::function<RT(const typename OT::value_type &)> functor) {
         if (!optional.has_value()) {
-            SQD_WARN("HandleOptional: Optional had no value!");
-            return;
+            SQD_LOG("HandleOptional: Optional had no value!");
+            return RT();
         }
 
         return std::invoke(functor, optional.value());
     };
 
-    static wxBitmapBundle CreateBitmapBundle(std::string_view baseFilename,
-                                             std::string_view extension,
-                                             const wxSize &size = wxSize(28,
-                                                                         28));
+    static wxBitmapBundle
+    CreateBitmapBundle(std::string_view baseFilename,
+                       std::string_view extension,
+                       wxBitmapType type = wxBITMAP_TYPE_PNG,
+                       const wxSize &size = wxSize(28, 28));
+
+    static wxBitmap CreateBitmap(const std::string &filename,
+                                 wxBitmapType type = wxBITMAP_TYPE_PNG,
+                                 const wxSize &size = wxSize(28, 28));
 };
 
 struct HashDatabaseTableLocation
     : public std::function<size_t(const DatabaseMetadata::TableLocation &)> {
     size_t operator()(const DatabaseMetadata::TableLocation &key) const {
-        const auto &[schema, table] = key;
-        return std::hash<std::string>{}(schema) ^
+        const auto &[id, schema, table] = key;
+        return id ^ std::hash<std::string>{}(schema) ^
                (std::hash<std::string>{}(table) << 1);
     }
 };

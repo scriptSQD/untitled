@@ -9,7 +9,7 @@ class QAPanel : public wxScrolledWindow {
     typedef std::vector<wxControl*> PanelControls;
 
   public:
-    QAPanel(wxWindow *parent, PanelControls buttonsWithCallbacks);
+    QAPanel(wxWindow *parent, PanelControls buttons);
 
   private:
     wxBoxSizer *m_Sizer;

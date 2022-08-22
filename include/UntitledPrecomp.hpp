@@ -1,6 +1,6 @@
 #pragma once
 
-// Main wx stuff
+/* Main wx stuff */
 #include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
@@ -34,7 +34,7 @@
 
 enum {
     None = 0,
-    IdChangeDb,
+    IdAddConnection,
     IdConnect,
     IdErrorDetails,
     IdReloadSchoolList,
