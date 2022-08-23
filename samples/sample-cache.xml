@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqd.untitled.manager>
+    <open-connections>
+        <connection displayName="" connectionString="">
+            <database name="">
+                <schema name="">
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                </schema>
+            </database>
+        </connection>
+        <connection displayName="" connectionString="">
+            <database name="">
+                <schema name="">
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                </schema>
+            </database>
+        </connection>
+        <connection displayName="" connectionString="">
+            <database name="">
+                <schema name="">
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                </schema>
+            </database>
+        </connection>
+        <connection displayName="" connectionString="">
+            <database name="">
+                <schema name="">
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                    <table name=""></table>
+                </schema>
+            </database>
+        </connection>
+    </open-connections>
+</sqd.untitled.manager>

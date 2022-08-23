@@ -6,6 +6,26 @@ Here I'll be testing out different C++ stuff, learning things, etc.
 
 Below you can find some useful stuff related to the project.
 
+### Content map:
+
+- [Usage](#usage)
+- [Details](#details)
+- [Requirements](#requirements)
+- [Setting up](#setting-up)
+- [Debugging](#debugging)
+- [Submodules](#submodules)
+
+## Details
+
+With the latest release, program now "introspects" the database and is able to view it all providing great UI controls
+for that.
+This starts to turn into DBMS, but will never become a fully-functional one. I will just give it a little more practice
+and move on
+to the next project.
+
+HiDPI support is not yet implemented, so beware that on some monitors (spotted on Windows machines) the thing may appear
+blurry and ugly.
+
 ## Requirements
 
 - Relatively new C++ compiler.

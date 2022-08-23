@@ -2,8 +2,9 @@
 
 #include <UntitledPrecomp.hpp>
 
-#include <StartupPanel.hpp>
-#include <Tabs/Tabs.hpp>
+#include "ManagerView.hpp"
+#include "Views/DatabaseConnectionDialog.hpp"
+#include "Views/StartupPanelView.hpp"
 
 class UntitledFrame : public wxFrame {
 
@@ -13,13 +14,11 @@ class UntitledFrame : public wxFrame {
                   const wxSize &size = wxDefaultSize);
 
   private:
-    StartupPanel *startupPanel = nullptr;
-    Tabs *managementUi = nullptr;
-    wxBoxSizer *sizer;
+    static void AddConnection(wxCommandEvent &evt);
 
-    void ClearSizer();
-    void OnConnected();
-    void OnConnectionFailed();
-    static void ChangeDb(wxCommandEvent &evt);
     void OnQuit(wxCommandEvent &evt);
+
+  private:
+    ManagerView *m_ManagerView;
+    wxBoxSizer *m_Sizer;
 };
